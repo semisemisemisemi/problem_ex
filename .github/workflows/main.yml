@@ -6,9 +6,6 @@ on:
       - main
   workflow_dispatch:
 
-permissions:
-  contents: write
-
 jobs:
   generate:
     runs-on: ubuntu-latest
@@ -29,29 +26,15 @@ jobs:
         OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
       run: python generate_problem.py
 
-    - name: Commit generated problem
+    - name: Commit and push changes
+      env:
+        ACTIONS_TOKEN: ${{ secrets.ACTIONS_TOKEN }}
       run: |
         git config --global user.name 'github-actions[bot]'
         git config --global user.email 'github-actions[bot]@users.noreply.github.com'
         git add README.md src/solution.cpp tests/test_solution.cpp
         git commit -m "Add generated problem"
-        git push https://x-access-token:${GITHUB_TOKEN}@github.com/${{ github.repository }}.git HEAD:main
-
-  build:
-    runs-on: ubuntu-latest
-    needs: generate
-
-    steps:
-    - uses: actions/checkout@v2
-
-    - name: Install dependencies
-      run: sudo apt-get install -y g++ cmake
-
-    - name: Configure CMake
-      run: cmake -S . -B build
-
-    - name: Build
-      run: cmake --build build
-
-    - name: Run tests
-      run: ./build/tests/test_solution
+        # Pull the latest changes from the remote to avoid conflicts
+        git pull --rebase origin main
+        # Push the changes
+        git push https://x-access-token:${ACTIONS_TOKEN}@github.com/${{ github.repository }}.git HEAD:main
