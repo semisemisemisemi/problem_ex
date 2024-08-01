@@ -19,6 +19,7 @@ def generate_problem(prompt):
 
 def update_files(problem_text):
     parts = problem_text.split('---')
+    print(parts)
     if len(parts) < 4:
         print("생성된 텍스트:", problem_text)
         raise ValueError("생성된 문제 텍스트 형식이 올바르지 않습니다.")
@@ -38,7 +39,7 @@ prompt = """
 다음을 포함한 C++ 프로그래밍 문제를 생성하세요:
 1. 자연어 문제 설명(끝에 '---'로 구분)
  사용자로부터 정수 n을 입력 받아서 그 정수값의 팩토리얼을 구하는 프로그램을 작성하세요. 팩토리얼이란 자연수 n에 대해서 1부터 n까지의 모든 자연수를 곱하는 것을 합니다. 예를 들어, 5의 팩토리얼은 5 x 4 x 3 x 2 x 1 = 120입니다.
----
+
 2. 문제 코드(끝에 '---'로 구분)
 아래는 프로그램의 대략적인 구조를 보여주는 기본 코드입니다.
 ```cpp
@@ -54,7 +55,7 @@ int main() {
     return 0;
 }
 ```
----
+
 3. 정답 코드(끝에 '---'로 구분)
 아래는 정답 코드입니다.
 ```cpp
@@ -73,8 +74,8 @@ int main() {
     return 0;
 }
 ```
----
-4. 테스트 케이스(끝에 '---'로 구분)
+
+4. 테스트 케이스
 입력:
 5
 출력:
@@ -91,7 +92,7 @@ int main() {
 1
 출력:
 1
----
+
 """  # 닫는 삼중 따옴표
 problem = generate_problem(prompt)
 update_files(problem)
