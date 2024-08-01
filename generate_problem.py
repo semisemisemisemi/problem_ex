@@ -1,7 +1,8 @@
 import openai
+import os
 
 def generate_problem(prompt):
-    openai.api_key = 'YOUR_OPENAI_API_KEY'
+    openai.api_key = os.getenv('OPENAI_API_KEY')
     
     response = openai.Completion.create(
         engine="gpt-3.5-turbo",
@@ -13,7 +14,10 @@ def generate_problem(prompt):
 
 def update_files(problem_text):
     # 문제 설명, 문제 코드, 정답 코드, 테스트 케이스 분리
-    problem_description, problem_code, solution_code, test_case_code = problem_text.split('---')
+    parts = problem_text.split('---')
+    if len(parts) < 4:
+        raise ValueError("생성된 문제 텍스트 형식이 올바르지 않습니다.")
+    problem_description, problem_code, solution_code, test_case_code = parts[:4]
 
     # README.md 업데이트
     with open('README.md', 'w') as readme_file:
