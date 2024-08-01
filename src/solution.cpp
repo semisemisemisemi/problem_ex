@@ -1,2 +1,15 @@
-'로 구분):
-C++를 사용해 사용자로부터 정수 n을 입력받아 그 정수값의 팩토리얼을 계산하는 프로그램을 작성하세요. 팩토리얼은 주어진 양수 n에 대해 1부터 n까지의 모든 정수를 곱한 값입니다. 예를 들어 5의 팩토리얼은 5 × 4 × 3 × 2 × 1 = 120이 됩니다.
+문제 코드:
+다음은 프로그램의 기본 구조를 보여주는 코드입니다.
+```cpp
+#include <iostream>
+using namespace std;
+int factorial(int n) {
+    // 이곳에 코드를 작성하세요.
+}
+int main() {
+    int n;
+    cin >> n;
+    cout << factorial(n) << endl;
+    return 0;
+}
+```

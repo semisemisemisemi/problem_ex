@@ -1,18 +1,17 @@
-'로 구분)
-아래는 프로그램의 기본 구조를 보여주는 코드의 템플릿입니다. 
-```cpp
-#include <iostream>
-
-using namespace std;
-
-int factorial(int n) {
-    // 여기에 구현하세요.
-}
-
-int main() {
-    int n;
-    cin >> n;
-    cout << factorial(n) << endl;
-    return 0;
-}
-```
+테스트 케이스:
+입력:
+5
+출력:
+120
+입력:
+10
+출력:
+3628800
+입력:
+0
+출력:
+1
+입력:
+1
+출력:
+1
