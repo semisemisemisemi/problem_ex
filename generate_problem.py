@@ -4,8 +4,8 @@ import os
 def generate_problem(prompt):
     openai.api_key = os.getenv('OPENAI_API_KEY')
     
-    response = openai.ChatCompletion.create(
-        model="gpt-3.5-turbo",
+    response = openai.chat.completions.create(
+        model="gpt-4",
         messages=[
             {"role": "system", "content": "You are a helpful assistant."},
             {"role": "user", "content": prompt}
