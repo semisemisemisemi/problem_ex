@@ -8,6 +8,7 @@ on:
 
 permissions:
   contents: write
+  pull-requests: write
 
 jobs:
   generate:
@@ -24,21 +25,35 @@ jobs:
     - name: Install dependencies
       run: pip install openai
 
+    - name: Install GitHub CLI
+      run: sudo apt-get install gh -y
+
     - name: Generate Problem
       env:
         OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
       run: python generate_problem.py
 
-    - name: Commit and push changes
+    - name: Commit and push changes to a new branch
       env:
         ACTIONS_TOKEN: ${{ secrets.ACTIONS_TOKEN }}
       run: |
         git config --global user.name 'github-actions[bot]'
         git config --global user.email 'github-actions[bot]@users.noreply.github.com'
+        
+        # Create a unique branch name using the current timestamp
+        TIMESTAMP=$(date +%s)
+        NEW_BRANCH="generated-problem-${TIMESTAMP}"
+        git checkout -b $NEW_BRANCH
+        
+        # Add and commit changes
         git add README.md src/solution.cpp tests/test_solution.cpp
         git commit -m "Add generated problem"
-        # Pull the latest changes and use 'theirs' strategy to resolve conflicts automatically
-        git pull --rebase origin main || git rebase --abort
-        git pull origin main --strategy-option theirs
-        # Push the changes
-        git push https://x-access-token:${ACTIONS_TOKEN}@github.com/${{ github.repository }}.git HEAD:main
+        
+        # Push the changes to the new branch
+        git push https://x-access-token:${ACTIONS_TOKEN}@github.com/${{ github.repository }}.git $NEW_BRANCH
+        
+        # Authenticate with GitHub CLI
+        echo ${ACTIONS_TOKEN} | gh auth login --with-token
+        
+        # Create a pull request
+        gh pr create --title "Add generated problem" --body "This PR contains the newly generated problem set." --base main --head $NEW_BRANCH
