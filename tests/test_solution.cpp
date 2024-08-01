@@ -1,17 +1,8 @@
-테스트 케이스:
-입력:
-5
-출력:
-120
-입력:
-10
-출력:
-3628800
-입력:
-0
-출력:
-1
-입력:
-1
-출력:
-1
+#include "gtest/gtest.h"
+
+// 여기에 테스트 케이스 코드를 작성하세요
+
+int main(int argc, char **argv) {
+    ::testing::InitGoogleTest(&argc, argv);
+    return RUN_ALL_TESTS();
+}
