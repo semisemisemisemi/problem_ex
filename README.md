@@ -1,8 +1,8 @@
-[![Review Assignment Due Date](https://classroom.github.com/assets/deadline-readme-button-22041afd0340ce965d47ae6ef1cefeee28c7c493a6346c4f15d667ab976d596c.svg)](https://classroom.github.com/a/u0MMcjni)
 # 과제 설명
 
 ## 문제 설명
-이곳에 문제 설명이 자동으로 추가됩니다.
+1. 자연어 문제 설명
+홍길동이는 한 권의 책에서 모든 문자를 소문자로 변환한 뒤, 특정 문자열이 책에서 몇 번 등장하는지 확인하는 프로그램을 작성하려고 한다. 문자열은 공백 없이 알파벳만으로 이루어진다. 이 프로그램은 책의 내용을 표현하는 문자열과 검색하고자 하는 문자열 두 가지를 입력으로 받는다. 특정 문자열이 책에 얼마나 많이 존재하는지 출력하는 프로그램을 작성하시오.
 
 ## 제출 방법
 1. `src/solution.cpp` 파일을 수정하여 문제를 해결하세요.
