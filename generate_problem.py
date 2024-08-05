@@ -1,5 +1,6 @@
 import openai
 import os
+import subprocess
 
 def generate_problem(prompt):
     api_key = os.getenv('OPENAI_API_KEY')
@@ -35,23 +36,45 @@ def update_files(problem_text):
     with open('tests/test_solution.cpp', 'w') as test_file:
         test_file.write(test_case_code.strip())
 
+def compile_and_run_cpp(file_path):
+    # Compile the C++ code
+    compile_command = f"g++ {file_path} -o test_program"
+    compile_process = subprocess.run(compile_command, shell=True, capture_output=True, text=True)
+
+    if compile_process.returncode != 0:
+        print("컴파일 오류:", compile_process.stderr)
+        return
+
+    # Run the compiled program
+    run_process = subprocess.run("./test_program", shell=True, capture_output=True, text=True)
+    
+    if run_process.returncode != 0:
+        print("프로그램 실행 오류:", run_process.stderr)
+    else:
+        print("프로그램 실행 결과:", run_process.stdout)
+
 prompt = """
-다음을 포함한 C++ 프로그래밍 문제를 생성하세요:
+C++ 프로그래밍 문제를 생성하세요. 아래는 예시 코드입니다. 아래 형식을 지키면서 새로운 문제를 생성해주세요.:
 1. 자연어 문제 설명(끝에 '---'로 구분)
- 사용자로부터 정수 n을 입력 받아서 그 정수값의 팩토리얼을 구하는 프로그램을 작성하세요. 팩토리얼이란 자연수 n에 대해서 1부터 n까지의 모든 자연수를 곱하는 것을 합니다. 예를 들어, 5의 팩토리얼은 5 x 4 x 3 x 2 x 1 = 120입니다.
+알파벳 대소문자로 된 단어가 주어지면, 이 단어에서 가장 많이 사용된 알파벳이 무엇인지 알아내는 프로그램을 작성하시오. 단, 대문자와 소문자를 구분하지 않는다. 
 
 2. 문제 코드(끝에 '---'로 구분)
 아래는 프로그램의 대략적인 구조를 보여주는 기본 코드입니다.
 ```cpp
 #include <iostream>
+#include <string>
+#include <map>
 using namespace std;
-int factorial(int n) {
-    // 여기에 코드를 구현하세요.
+
+char mostFrequentChar(const string& str) {
+    // 여기에 코드를 작성하세요.
 }
+
 int main() {
-    int n;
-    cin >> n;
-    cout << factorial(n) << endl;
+    string input;
+    cout << "Enter a word: ";
+    cin >> input;
+    cout << "The most frequent character is: " << mostFrequentChar(input) << endl;
     return 0;
 }
 ```
@@ -60,38 +83,63 @@ int main() {
 아래는 정답 코드입니다.
 ```cpp
 #include <iostream>
+#include <string>
+#include <map>
+#include <cctype>
 using namespace std;
-int factorial(int n) {
-    if (n == 0)
-        return 1;
-    else
-        return n * factorial(n - 1);
+
+char mostFrequentChar(const string& str) {
+    map<char, int> frequency;
+    for (char c : str) {
+        c = tolower(c); // 대소문자 구분을 없애기 위해 소문자로 변환
+        frequency[c]++;
+    }
+
+    char mostFrequent = ' ';
+    int maxCount = 0;
+    for (const auto& pair : frequency) {
+        if (pair.second > maxCount) {
+            mostFrequent = pair.first;
+            maxCount = pair.second;
+        }
+    }
+
+    return mostFrequent;
 }
+
 int main() {
-    int n;
-    cin >> n;
-    cout << factorial(n) << endl;
+    string input;
+    cout << "Enter a word: ";
+    cin >> input;
+    cout << "The most frequent character is: " << mostFrequentChar(input) << endl;
     return 0;
 }
+
 ```
 
 4. 테스트 케이스
-입력:
-5
-출력:
-120
-입력:
-10
-출력:
-3628800
-입력:
-0
-출력:
-1
-입력:
-1
-출력:
-1
+#include <iostream>
+#include <cassert>
+#include <string>
+using namespace std;
+
+char mostFrequentChar(const string& str);
+
+void test_mostFrequentChar() {
+    assert(mostFrequentChar("hello") == 'l');
+    assert(mostFrequentChar("Hello") == 'l'); // 대소문자 구분 안 함
+    assert(mostFrequentChar("HELLO") == 'l'); // 대소문자 구분 안 함
+    assert(mostFrequentChar("test") == 't');
+    assert(mostFrequentChar("TeSt") == 't');
+    assert(mostFrequentChar("abcde") == 'a'); // 모든 문자가 동일한 빈도일 때 첫 문자 반환
+    cout << "All test cases passed!" << endl;
+}
+
+int main() {
+    test_mostFrequentChar();
+    return 0;
+}
+
 
 """  # 닫는 삼중 따옴표
 problem = generate_problem(prompt)
