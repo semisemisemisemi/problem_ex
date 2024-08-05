@@ -50,8 +50,10 @@ def compile_and_run_cpp(file_path):
     
     if run_process.returncode != 0:
         print("프로그램 실행 오류:", run_process.stderr)
+        return False
     else:
         print("프로그램 실행 결과:", run_process.stdout)
+        return "All test cases passed!" in run_process.stdout
 
 prompt = """
 C++ 프로그래밍 문제를 생성하세요. 난이도는 다음과 같습니다. 아래 문제와 비슷한 난이도로 만들어주세요:
@@ -172,3 +174,9 @@ int main() {
 """  # 닫는 삼중 따옴표
 problem = generate_problem(prompt)
 update_files(problem)
+
+# Test the generated solution
+if compile_and_run_cpp('tests/test_solution.cpp'):
+    print("모든 테스트 케이스가 성공적으로 통과되었습니다!")
+else:
+    print("테스트 케이스가 실패했습니다.")
